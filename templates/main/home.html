@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Главная{% endblock %}
+{% block show_ui %}
+  {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #0e0f17;
+    color: white;
+    font-family: 'Jost', 'Montserrat', sans-serif;
+    margin: 0;
+  }
+
+  .main-content {
+    padding: 14px;
+    padding-top: 14px;
+    padding-bottom: 60px;
+  }
+
+  .card {
+    background-color: #1a1b23;
+    border-radius: 20px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    color: white;
+    width: 100%;
+  }
+
+  .card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .subscription-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .subscription-column {
+    flex: 1;
+  }
+
+  .subscription-label {
+    font-size: 0.85rem;
+    color: #aaa;
+  }
+
+  .subscription-value {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #d6ff5c;
+    margin-bottom: 10px;
+  }
+
+  .days-left {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: #d6ff5c;
+    line-height: 1;
+    text-align: right;
+  }
+
+  .days-left-label {
+    font-size: 1rem;
+    text-align: right;
+    color: #ccc;
+  }
+
+  .btn-freeze,
+  .btn-unfreeze {
+    margin-top: 12px;
+    background-color: #d6ff5c;
+    color: #0e0f17;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+
+  .workout-card {
+    background-color: #121319;
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .workout-card p {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin-bottom: 3px;
+  }
+
+  .workout-card strong {
+    font-size: 1.3rem;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .workout-highlight {
+    color: #d6ff5c;
+    font-weight: 500;
+  }
+
+  
+</style>
+
+<div class="main-content">
+  <div class="main-layout-desktop">
+  <div class="card">
+    <h4>АБОНЕМЕНТ</h4>
+    {% if subscription %}
+    <div class="subscription-row">
+      <div class="subscription-column">
+        <div class="subscription-label">Тариф</div>
+        <div class="subscription-value">{{ subscription.name }}</div>
+        <div class="subscription-label">Заморозка</div>
+        <div class="subscription-value">
+          {% if subscription.is_frozen and frozen_days_left > 0 %}
+            Осталось {{ frozen_days_left }} д.
+          {% else %}
+            Не заморожен
+          {% endif %}
+        </div>
+
+        {% if not subscription.is_frozen %}
+        <form method="post" action="{% url 'freeze_subscription' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-freeze">Заморозить</button>
+        </form>
+        {% else %}
+        <form method="post" action="{% url 'unfreeze_subscription' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-unfreeze">Разморозить</button>
+        </form>
+        {% endif %}
+      </div>
+      <div class="subscription-column" style="text-align: right;">
+        <div class="subscription-label">Осталось</div>
+        <div class="days-left">
+          {% if subscription.is_frozen %}
+            {{ remaining_days|default:"—" }}
+          {% elif remaining_days is not None %}
+            {{ remaining_days }}
+          {% else %}
+            —
+          {% endif %}
+        </div>
+        <div class="days-left-label">
+          {% if subscription.is_frozen %}
+            дней
+          {% else %}
+            дней
+          {% endif %}
+        </div>
+      </div>
+
+    {% else %}
+    <p class="text-white">У вас нет активного абонемента.</p>
+    {% endif %}
+  </div>
+
+    <div class="card">
+      <h4>ПРЕДСТОЯЩИЕ ТРЕНИРОВКИ</h4>
+      {% if upcoming_workouts %}
+        {% for w in upcoming_workouts %}
+         <div class="workout-card">
+            <strong>{{ w.type }}</strong>
+            <p>Тренер: <span class="workout-highlight">{{ w.trainer }}</span></p>
+            <p>Дата: <span class="workout-highlight">{{ w.date|date:"d.m.Y" }}</span></p>
+            <p>Время: <span class="workout-highlight">{{ w.start }} – {{ w.end }}</span></p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-white">У вас нет предстоящих записей.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

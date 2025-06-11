@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Настройки профиля{% endblock %}
+{% block show_ui %}{% endblock %}
+{% block content %}
+<style>
+  body {
+    background-color: #0b0f1a !important;
+  }
+
+  .mobile-nav {
+    display: none !important;
+  }
+
+  .profile-settings {
+    max-width: 450px;
+    margin: 30px auto;
+    background-color: #1a1b23;
+    padding: 30px 25px;
+    border-radius: 24px;
+    color: white;
+  }
+
+  .profile-settings h2 {
+    margin: -40px auto;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #d6ff5c;
+  }
+
+  .form-label {
+    color: #ccc;
+    margin-bottom: 5px;
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background-color: #2a2b35;
+    color: white;
+    margin-bottom: 15px;
+  }
+
+  .form-control:focus {
+    outline: 2px solid #d6ff5c;
+    background-color: #333540;
+  }
+
+  .btn-save {
+    background-color: #d6ff5c;
+    color: #0e0f17;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .btn-logout {
+    background: transparent;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    display: block;
+    text-decoration: none;
+  }
+  input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+textarea,
+select {
+  color: white;
+  background-color: #2a2b35;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #d6ff5c;
+  background-color: #333540;
+  color: white;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  color: white;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+</style>
+<div class="profile-settings">
+  <a href="{% url 'home' %}" class="mb-3 d-inline-block text-white" style="text-decoration: none;">
+    ← Назад
+  </a>
+<div class="profile-settings">
+  <h2>Настройки профиля</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    <label class="form-label" for="id_first_name">Имя</label>
+    {{ form.first_name }}
+
+    <label class="form-label" for="id_last_name">Фамилия</label>
+    {{ form.last_name }}
+
+    <label class="form-label" for="id_email">Email</label>
+    {{ form.email }}
+
+    <label class="form-label" for="id_phone_number">Номер телефона</label>
+    <input type="text" name="phone_number" id="id_phone_number"
+          class="form-control"
+          value="{{ form.phone_number.value|default:user.phone_number }}">
+
+    <label class="form-label" for="id_birth_date">Дата рождения</label>
+    {{ form.birth_date }}
+
+    <button type="submit" class="btn-save">Сохранить изменения</button>
+  </form>
+
+  <a href="{% url 'logout' %}" class="btn-logout">Выйти из аккаунта</a>
+</div>
+{% endblock %}

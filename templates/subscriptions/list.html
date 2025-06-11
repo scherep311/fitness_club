@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #0e0f17;
+    color: white;
+    font-family: 'Jost', 'Montserrat', sans-serif;
+    margin: 0;
+  }
+
+  .main-content {
+    padding: 10px 20px;
+  }
+
+  .subscriptions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .subscription-card {
+    background-color: #1a1b23;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .subscription-card:hover {
+    transform: scale(1.02);
+  }
+
+  .subscription-info {
+    flex: 1;
+  }
+
+  .subscription-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .subscription-detail {
+    font-size: 0.95rem;
+    margin: 4px 0;
+    color: #ccc;
+  }
+
+  .price {
+    color: #d6ff5c;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 8px;
+  }
+
+  .subscription-action {
+    flex-shrink: 0;
+  }
+
+  .subscription-btn {
+    background-color: #d6ff5c;
+    color: #0e0f17;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+
+  }
+
+  .subscription-btn:hover {
+    background-color: #d6ff5c;
+  }
+
+  .message-box {
+    background-color: #2a2b33;
+    border-left: 4px solid #d6ff5c;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: #ccc;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 999px) {
+    .subscription-btn,
+    .subscription-action {
+      display: none;
+    }
+  }
+</style>
+
+<div class="main-content">
+  {% if message %}
+  <div class="message-box">
+    {{ message }}
+  </div>
+  {% endif %}
+
+  <div class="subscriptions-grid">
+    {% for sub in subscriptions %}
+    <div class="subscription-card" onclick="handleCardClick('{{ sub.id }}')">
+      <div class="subscription-info">
+        <div class="subscription-title">{{ sub.name }}</div>
+        <div class="price">Цена: {{ sub.price }} ₽</div>
+        <div class="subscription-detail">
+          Заморозка:
+          {% if sub.max_freeze_days %}
+            до {{ sub.max_freeze_days }} дней
+          {% else %}
+            Не предусмотрено
+          {% endif %}
+        </div>
+      </div>
+
+      <a href="{% url 'buy_subscription' sub.id %}" class="subscription-btn subscription-action">Купить</a>
+      </div>
+        {% empty %}
+        <p class="text-white">Абонементы не найдены.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+const hasActive = "{{ has_active|yesno:'true,false' }}" === "true";
+
+function handleCardClick(id) {
+  if (hasActive) {
+    showToast("У вас уже есть активный абонемент.");
+    return;
+  }
+  if (window.innerWidth < 1000) {
+    window.location.href = `/subscriptions/buy/${id}/`;
+  }
+}
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.style.position = "fixed";
+  toast.style.bottom = "100px";
+  toast.style.left = "50%";
+  toast.style.transform = "translateX(-50%)";
+  toast.style.background = "#f0ad4e";
+  toast.style.color = "#000";
+  toast.style.padding = "12px 20px";
+  toast.style.borderRadius = "10px";
+  toast.style.fontWeight = "600";
+  toast.style.zIndex = "9999";
+  toast.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+</script>
+{% endblock %}

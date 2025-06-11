@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #0e0f17;
+    color: white;
+    font-family: 'Jost', 'Montserrat', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .main-content {
+    padding: 10px 20px;
+  }
+
+  .trainers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .trainer-detail-card {
+    background-color: #1a1b23;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+  }
+
+  .trainer-detail-card:hover {
+    transform: scale(1.02);
+  }
+
+  .trainer-image img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 2px solid #d6ff5c;
+  }
+
+  .trainer-body h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: white;
+  }
+
+  .specialization,
+  .experience,
+  .description {
+    font-size: 0.95rem;
+    margin: 4px 0;
+    color: #ccc;
+  }
+
+  .experience {
+    color: #d6ff5c;
+    font-weight: bold;
+  }
+  @media (max-width: 768px) {
+  .trainers-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .desktop-title {
+    display: none;
+  }
+  
+  .trainer-detail-card {
+    flex-direction: row;
+    text-align: left;
+    padding: 12px;
+    max-width: 95%;
+    width: 95%;
+    gap: 10px;
+  }
+
+  .trainer-image img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .trainer-body h4 {
+    font-size: 0.95rem;
+  }
+
+  .specialization,
+  .experience {
+    font-size: 0.8rem;
+  }
+
+}
+
+@media (min-width: 768px) and (max-width: 999px) {
+  .trainers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    justify-items: center;
+  }
+
+  .trainer-detail-card {
+    flex-direction: row;
+    text-align: left;
+    padding: 10px;
+    width: 100%;
+    max-width: 320px;
+    gap: 10px;
+  }
+
+  .trainer-image img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .trainer-body h4 {
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+  }
+
+  .specialization,
+  .experience,
+  .description {
+    font-size: 0.8rem;
+    margin: 2px 0;
+  }
+
+  .desktop-title {
+    display: none;
+  }
+}
+</style>
+
+<div class="main-content">
+  <h2 class="text-white mb-4 desktop-title">Тренеры клуба</h2>
+
+  <div class="trainers-grid">
+    {% for trainer in trainers %}
+    <div class="trainer-detail-card">
+      <div class="trainer-image">
+        {% if trainer.photo %}
+          <img src="{{ trainer.photo.url }}" alt="{{ trainer.fullname }}">
+        {% else %}
+          <img src="{% static 'img/default_trainer.png' %}" alt="Фото отсутствует">
+        {% endif %}
+      </div>
+      <div class="trainer-body">
+        <h4>{{ trainer.fullname }}</h4>
+        <p class="specialization">{{ trainer.specialization }}</p>
+        <p class="experience">{{ trainer.years_of_experience }} лет опыта</p>
+        <p class="description">{{ trainer.description }}</p>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-white">Тренеры не найдены.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

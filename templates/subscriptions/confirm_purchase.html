@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}Подтверждение покупки{% endblock %}
+{% block show_ui %}{% endblock %}
+{% block content %}
+<style>
+  body {
+    background-color: #0e0f17 !important;
+  }
+
+  .confirm-container {
+    background-color: #1a1b23;
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
+    max-width: 500px;
+    margin: 80px auto 40px auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .confirm-container h3 {
+    font-weight: 600;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  .confirm-label {
+    font-weight: 600;
+    color: #999;
+    margin-top: 12px;
+  }
+
+  .confirm-value {
+    font-size: 1rem;
+    color: #fff;
+  }
+
+  .highlight {
+    color: #d6ff5c;
+    font-weight: 600;
+  }
+
+  .btn-confirm {
+    background-color: #d6ff5c;
+    color: #0e0f17;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-top: 20px;
+    width: 100%;
+    transition: background 0.2s;
+  }
+
+  .btn-confirm:hover {
+    background-color: #d6ff5c;
+  }
+
+  .btn-cancel {
+    background: none;
+    border: 1px solid #ccc;
+    color: #ccc;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+  }
+
+  .warning-box {
+    background: #2a2b33;
+    border-left: 4px solid #f0ad4e;
+    padding: 12px;
+    border-radius: 10px;
+    color: #f0ad4e;
+    margin-bottom: 20px;
+  }
+
+  .back-arrow {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 1.8rem;
+    color: #ffffff;
+    text-decoration: none;
+    z-index: 2000;
+  }
+
+  /* Скрываем нижнюю панель на этой странице */
+  .mobile-nav {
+    display: none !important;
+  }
+</style>
+
+<a href="{% url 'subscription_list' %}" class="back-arrow">←</a>
+
+<div class="confirm-container">
+
+  {% if warning %}
+  <div class="warning-box">
+    ⚠ {{ warning }}
+  </div>
+  {% endif %}
+
+  <h3>Подтвердите покупку</h3>
+
+  <div class="confirm-label">Абонемент:</div>
+  <div class="confirm-value highlight">{{ sub.name }}</div>
+
+  <div class="confirm-label">Цена:</div>
+  <div class="confirm-value">{{ sub.price }} ₽</div>
+
+  <hr style="border-color: #333; margin: 20px 0;">
+
+  <div class="confirm-label">Имя:</div>
+  <div class="confirm-value">{{ user.first_name }}</div>
+
+  <div class="confirm-label">Фамилия:</div>
+  <div class="confirm-value">{{ user.last_name }}</div>
+
+  <div class="confirm-label">Дата рождения:</div>
+  <div class="confirm-value">{{ user.birth_date|default:"—" }}</div>
+
+  <form method="post" action="{% url 'buy_subscription' sub.id %}">
+    {% csrf_token %}
+    <div class="confirm-label">Email для чека и оплаты:</div>
+    <input type="email" name="email" class="form-control mt-1" required style="margin-top: 6px; padding: 10px; border-radius: 6px; border: none; width: 100%;">
+
+    <button type="submit" class="btn-confirm">Перейти к оплате</button>
+  </form>
+
+  <a href="{% url 'subscription_list' %}" class="btn-cancel">Отмена</a>
+</div>
+{% endblock %}

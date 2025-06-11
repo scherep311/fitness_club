@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}О клубе{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600&family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --accent-color: #d6ff5c;
+    --bg-color: #0e0f17;
+    --card-color: #1b1c24;
+    --text-color: #ffffff;
+    --text-secondary: #9ca3af;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    font-family: 'Jost', 'Montserrat', sans-serif;
+    color: var(--text-color);
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  .club-hero {
+    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
+                url("{% static 'img/club.jpg' %}") center/cover no-repeat;
+    padding: 24px 16px;
+    text-align: center;
+    border-radius: 16px;
+    color: var(--text-color);
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .contact-banner {
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6px);
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: nowrap;
+    text-align: left;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  }
+
+  .contact-item {
+    flex: 1 1 0;
+    text-align: center; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contact-item h6 {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    gap: 6px;
+  }
+
+  .contact-item p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.3;
+  }
+
+  .contact-icon {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+  }
+
+  .features-icon {
+    width: 48px;
+    margin-bottom: 10px;
+    filter: brightness(0) invert(1);
+  }
+
+  .features-card {
+    background: var(--card-color);
+    padding: 12px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.08);
+    min-height: 10px;
+  }
+
+  .features-card:hover {
+    background: #23242e;
+    transform: translateY(-3px);
+  }
+
+  .section-title {
+    font-weight: 600;
+    font-size: 1.6rem;
+    color: var(--accent-color);
+    margin: 32px 0 16px;
+    text-align: center;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px 24px;
+    margin-top: 20px;
+  }
+
+  .club-service-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .club-service-item span {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .club-service-item h6 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-color);
+  }
+
+  .text-muted {
+    color: var(--text-secondary) !important;
+  }
+
+  @media (max-width: 769px) {
+    .container {
+      padding: 0 10px;
+    }
+
+    .club-hero {
+      padding: 16px 10px;
+      max-width: 95%;
+    }
+
+    .club-hero h1 {
+      font-size: 1.6rem;
+    }
+
+    .club-hero p {
+      font-size: 0.95rem;
+    }
+
+    .contact-banner {
+      max-width: 95%;
+      margin: 16px auto 0;
+      padding: 12px;
+      gap: 16px;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+    }
+    .features-card {
+      background: var(--card-color);
+      padding: 12px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 10px;
+      margin-left: auto;        
+      margin-right: auto;
+    }
+    .features-card h5 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.features-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.2;
+}
+    .contact-item h6 {
+      font-size: 0.95rem;
+    }
+
+    .contact-item p {
+      font-size: 0.85rem;
+    }
+
+    .features-icon {
+      width: 32px;
+      margin-bottom: 6px;
+    }
+
+    .features-card h5 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .features-card p {
+      font-size: 0.85rem;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    .club-service-item h6 {
+      font-size: 0.9rem;
+    }
+    .club-service-item {
+      font-size: 0.5rem;
+    }
+    .club-service-item span {
+      font-size: 0.5rem;
+    }
+
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px 16px;
+    }
+  }
+
+  @media (max-width: 518px) {
+  .contact-banner {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .contact-item {
+    flex: 1 1 0;
+    text-align: left;
+  }
+
+  .contact-item h6 {
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .contact-item p {
+    font-size: 0.55rem;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .contact-icon {
+    width:11px;
+    height:11px;
+  }
+}
+
+</style>
+
+
+<div class="club-hero">
+  <h1 class="display-5 fw-bold">ELEVATE CLUB</h1>
+  <p class="lead mt-3">Современный фитнес-клуб для вашего роста</p>
+
+  <div class="contact-banner">
+    <div class="contact-item">
+      <h6><img src="{% static 'icons/geo-alt.svg' %}" class="contact-icon"> Адрес</h6>
+      <p>ул. Худякова, 12</p>
+    </div>
+    <div class="contact-item">
+      <h6><img src="{% static 'icons/clock.svg' %}" class="contact-icon"> Часы работы</h6>
+      <p>Пн–Пт: 7:00–24:00<br>Сб–Вс: 9:00–22:00</p>
+    </div>
+    <div class="contact-item">
+      <h6><img src="{% static 'icons/telephone.svg' %}" class="contact-icon"> Контакты</h6>
+      <p>+7 (351) 200-28-02</p>
+    </div>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row text-center g-4">
+    <div class="col-md-4">
+      <div class="features-card h-100">
+        <img src="{% static 'img/icon-space.png' %}" class="features-icon" alt="">
+        <h5 class="fw-semibold">1600 м²</h5>
+        <p class="text-muted">Просторные залы с зонами: силовая, кардио, бокс</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="features-card h-100">
+        <img src="{% static 'img/icon-group.png' %}" class="features-icon" alt="">
+        <h5 class="fw-semibold">Групповые тренировки</h5>
+        <p class="text-muted">TRX, йога, танцы, functional — для всех уровней подготовки</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="features-card h-100">
+        <img src="{% static 'img/icon-box.png' %}" class="features-icon" alt="">
+        <h5 class="fw-semibold">Бокс-зона</h5>
+        <p class="text-muted">Груши, лапы, ринг и спарринги с тренером</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Услуги клуба</h2>
+  <div class="services-grid">
+    {% for item in services %}
+      <div class="club-service-item">
+        <span>+</span>
+        <h6>{{ item }}</h6>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2 class="section-title">Специальные направления</h2>
+  <div class="row text-center mt-4">
+    <div class="col-md-6 mb-3">
+      <div class="features-card">
+        <img src="{% static 'img/icon-corp.png' %}" class="features-icon" alt="">
+        <h5 class="fw-semibold">Корпоративный фитнес</h5>
+        <p class="text-muted">Программы для команд и компаний</p>
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <div class="features-card">
+        <img src="{% static 'img/icon-kids.png' %}" class="features-icon" alt="">
+        <h5 class="fw-semibold">Детский фитнес</h5>
+        <p class="text-muted">Занятия в группах 4–12 лет с тренерами</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

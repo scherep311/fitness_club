@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock %}
+{% block show_ui %}{% endblock %}
+{% block content %}
+<style>
+  body {
+    background-color: #0e0f17;
+    color: white;
+    font-family: 'Jost', 'Montserrat', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .register-wrapper {
+    max-width: 500px;
+    margin: 40px auto;
+    background-color: #1a1b23;
+    padding: 30px 25px;
+    border-radius: 24px;
+  }
+
+  .register-wrapper h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #d6ff5c;
+  }
+
+  .form-label {
+    color: #ccc;
+    margin-bottom: 5px;
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background-color: #2a2b35;
+    color: white;
+    margin-bottom: 15px;
+  }
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+textarea,
+select {
+  color: white;
+  background-color: #2a2b35;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #d6ff5c;
+  background-color: #333540;
+  color: white;
+}
+
+
+input[type="date"]::-webkit-datetime-edit {
+  color: white;
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+  .form-control:focus {
+    outline: 2px solid #d6ff5c;
+    background-color: #333540;
+  }
+
+  .btn-submit {
+    background-color: #d6ff5c;
+    color: #0e0f17;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .text-center a {
+    color: #d6ff5c;
+    text-decoration: none;
+  }
+
+  .text-center a:hover {
+    text-decoration: underline;
+  }
+
+  .mobile-nav,
+  .settings-button {
+    display: none !important;
+  }
+
+  @media (min-width: 768px) {
+    input[type="date"] {
+      appearance: auto;
+    }
+  }
+  .register-wrapper h2{
+    font-weight: 510;
+  }
+  @media (max-width: 767px) {
+    input[type="date"] {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: #2a2b35;
+      color: white;
+    }
+  }
+</style>
+
+<div class="register-wrapper">
+  <h2>РЕГИСТРАЦИЯ</h2>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% for field in form %}
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <div class="text-danger small">{{ field.errors|join:", " }}</div>
+      {% endif %}
+    {% endfor %}
+
+    <button type="submit" class="btn-submit">Зарегистрироваться</button>
+  </form>
+
+  <p class="text-center mt-3">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+</div>
+{% endblock %}

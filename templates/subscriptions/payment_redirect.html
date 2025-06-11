@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Оплата{% endblock %}
+{% block show_ui %}{% endblock %}
+{% block content %}
+<style>
+  body {
+    background-color: #0e0f17 !important;
+  }
+
+  .payment-container {
+    background-color: #1a1b23;
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
+    max-width: 480px;
+    margin: 80px auto 40px auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    text-align: center;
+  }
+
+  #burger,
+  .burger,
+  .sidebar,
+  .mobile-nav {
+    display: none !important;
+  }
+
+  .payment-container h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .payment-label {
+    font-weight: 600;
+    color: #999;
+    margin-top: 12px;
+  }
+
+  .payment-value {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .btn-pay {
+    background-color: #d6ff5c;
+    color: #0e0f17;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 20px;
+    width: 100%;
+    transition: background 0.2s;
+  }
+
+  .btn-pay:hover {
+    background-color: #d6ff5c;
+  }
+
+  .back-arrow {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 1.8rem;
+    color: #ffffff;
+    text-decoration: none;
+    z-index: 2000;
+  }
+
+  .mobile-nav {
+    display: none !important;
+  }
+</style>
+
+<a href="{% url 'buy_subscription' sub_id %}" class="back-arrow">←</a>
+
+<div class="payment-container">
+  <h3>Оплата</h3>
+
+  <div class="payment-label">Абонемент:</div>
+  <div class="payment-value">{{ data.name }}</div>
+
+  <div class="payment-label">Цена:</div>
+  <div class="payment-value">{{ data.price }} ₽</div>
+
+  <form method="post" action="{% url 'payment_success' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-pay">Оплатить</button>
+  </form>
+</div>
+{% endblock %}

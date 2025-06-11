@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  body {
+    background-color: #0e0f17;
+    color: white;
+    font-family: 'Jost', 'Montserrat', sans-serif;
+  }
+
+  .tabs {
+  display: flex;
+  justify-content: space-between; 
+  max-width: 360px; 
+  margin: 20px auto;
+  background-color: #1a1b23;
+  border-radius: 12px;
+  padding: 6px 0; 
+  font-family: 'Jost', sans-serif;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0; 
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  color: #ccc;
+  white-space: nowrap;
+  transition: background 0.3s;
+}
+
+.tab.active {
+  background-color: #d6ff5c;
+  color: #0e0f17;
+}
+
+  .tab-content {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .workout-card {
+  background-color: #1a1b23;
+  margin-bottom: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  font-size: 0.85rem;
+}
+
+.workout-flex {
+  display: flex;
+  justify-content: flex-start; 
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.workout-info {
+  flex: 1;
+  min-width: 180px;
+}
+.left-info {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.right-info {
+  flex: 0 0 auto; 
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-left: 0; 
+  min-width: 130px; 
+}
+
+
+.workout-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-confirm.small {
+  padding: 10px 20px;
+  border-radius: 16px;
+  font-weight: 700;
+  background-color: #d6ff5c;
+  color: #0e0f17;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-fav.yellow {
+  background-color: transparent;
+  border: none;
+  font-size: 0.85rem; 
+  color: #ffdf57;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  user-select: none;
+  width: 20px;      
+  height: 20px;     
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+  .weekday-buttons {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+
+  .weekday-btn {
+    flex: 0 0 auto;
+    min-width: 60px;
+    padding: 8px 12px;
+    background: #2a2b33;
+    color: #ffffff;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .weekday-btn.active {
+    background: #d6ff5c;
+    color: #0e0f17;
+    font-weight: 600;
+  }
+
+  .main-content {
+    padding-bottom: 100px;
+  }
+
+
+
+.fav-form {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+  .workout-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+.workout-card {
+  position: relative;
+}
+
+ .workout-details {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: #ccc;
+  min-width: 120px;
+  text-align: right;
+  gap: 8px;
+}
+.week-nav-btn {
+  white-space: nowrap; 
+  padding: 6px 12px;
+  min-width: auto;
+  max-width: 45%; 
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; 
+}
+
+  .btn-cancel {
+    background-color: #ff6b6b;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+
+  .btn-cancel:hover {
+    background-color: #e34242;
+  }
+
+
+.trainer-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  white-space: normal; 
+  overflow-wrap: break-word;
+}
+.icon {
+  width: 20px;      
+  height: 20px;    
+  vertical-align: middle;
+  margin-right: 8px;
+  object-fit: contain; 
+  fill:#ffffff !important;
+}
+.icon svg path {
+  fill: white;
+}
+
+</style>
+
+<div class="container main-content">
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('schedule')">Расписание</div>
+    <div class="tab" onclick="showTab('mine')">Мои записи</div>
+    <div class="tab" onclick="showTab('favorites')">Избранное</div>
+  </div>
+  <!-- Расписание -->
+  <div id="tab-schedule" class="tab-content active">
+    <div class="week-navigation" style="max-width: 360px; margin: 0 auto 10px; display: flex; justify-content: space-between; gap: 10px; box-sizing: border-box;">
+      {% if week_offset == 0 %}
+        <div></div>
+        <a href="?week=1&day=0" class="btn btn-sm btn-outline-light week-nav-btn">Следующая неделя →</a>
+      {% elif week_offset == 1 %}
+        <a href="?week=0&day={{ selected_day }}" class="btn btn-sm btn-outline-light week-nav-btn">← Предыдущая неделя</a>
+        <div></div>
+      {% endif %}
+    </div>
+    <div class="weekday-buttons">
+      {% for day in weekdays %}
+      <a href="?day={{ day.index }}&week={{ week_offset }}" class="weekday-btn {% if day.index == selected_day %}active{% endif %}">
+        {{ day.name }}<br>{{ day.date|date:"d.m" }}
+      </a>
+      {% endfor %}
+    </div>
+
+    {% for workout in workouts %}
+      <div class="workout-card workout-flex">
+        <div class="workout-info left-info">
+          <div><strong>{{ workout.type }}</strong></div>
+          <div>
+            <img src="{% static 'icons/clock.svg' %}" alt="Время" class="icon" /> 
+            {{ workout.start_time|date:"H:i" }} – {{ workout.end_time|date:"H:i" }}
+          </div>
+          <div>
+            <img src="{% static 'icons/trainers.svg' %}" alt="Свободно мест" class="icon" />
+            Свободно мест: {{ workout.free_spots }}
+          </div>
+        </div>
+        <div class="workout-info right-info">
+          <div>{{ workout.id_trainer.fullname }}</div>
+          {% if workout.is_future %}
+            {% if workout.id in user_workout_ids_for_day %}
+              <span style="color: #d6ff5c; font-weight: 600;">Вы записаны</span>
+            {% elif subscription.is_frozen %}
+              <span style="color: #888; font-size: 0.9rem;">Запись недоступна</span>
+            {% else %}
+              <form method="post" action="{% url 'register_workout' workout.id %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="week" value="{{ week_offset }}">
+                <input type="hidden" name="day" value="{{ selected_day }}">
+                <button type="submit" class="btn-confirm small">Записаться</button>
+              </form>
+            {% endif %}
+          {% else %}
+            <span style="color: #888; font-size: 0.9rem;">Завершена</span>
+          {% endif %}
+          <form method="post" action="{% url 'toggle_favorite' workout.id %}" class="fav-form" style="display: inline; margin-left: 8px;">
+            {% csrf_token %}
+            <input type="hidden" name="week" value="{{ week_offset }}">
+            <input type="hidden" name="day" value="{{ selected_day }}">
+            <button type="submit" class="btn-fav yellow" aria-label="Toggle favorite">
+              {% if workout.id in favorite_workout_ids %}
+                ★
+              {% else %}
+                ☆
+              {% endif %}
+            </button>
+          </form>
+        </div>
+      </div>
+
+
+    {% empty %}
+    <p class="text-white">Нет тренировок на выбранный день.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Мои записи -->
+  <div id="tab-mine" class="tab-content">
+    {% for item in my_workouts %}
+    <div class="workout-card workout-flex">
+      <div class="workout-info left-info">
+        <div><strong>{{ item.type }}</strong></div>
+        <div>
+          <img src="{% static 'icons/clock.svg' %}" alt="Время" class="icon" />
+          {{ item.start|date:"H:i" }} – {{ item.end|date:"H:i" }}
+        </div>
+        <div>
+          {{ item.trainer }}
+        </div>
+        <div>
+          {{ item.date|date:"d.m.Y" }}
+        </div>
+      </div>
+      <div class="workout-actions-row">
+        <form method="post" action="{% url 'cancel_workout' item.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-cancel">Отменить</button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-white">У вас нет записей на тренировки.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Избранное -->
+  <div id="tab-favorites" class="tab-content">
+    {% for item in favorites %}
+    <div class="workout-card workout-flex">
+      <div class="workout-info left-info">
+        <div><strong>{{ item.id_workout.type }}</strong></div>
+        <div>
+          <img src="{% static 'icons/clock.svg' %}" alt="Время" class="icon" />
+          {{ item.id_workout.start_time|date:"H:i" }} – {{ item.id_workout.end_time|date:"H:i" }}
+        </div>
+        <div>
+          <img src="{% static 'icons/trainers.svg' %}" alt="Тренер" class="icon" />
+          Тренер: {{ item.id_workout.id_trainer.fullname }}
+        </div>
+      </div>
+      <div class="workout-actions-row">
+        <form method="post" action="{% url 'toggle_favorite' item.id_workout.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-fav yellow">★</button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-white">Нет избранных тренировок.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  function showTab(tabName) {
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach(tab => tab.classList.remove("active"));
+    contents.forEach(c => c.classList.remove("active"));
+
+    document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add("active");
+    document.getElementById(`tab-${tabName}`).classList.add("active");
+  }
+</script>
+{% endblock %}
